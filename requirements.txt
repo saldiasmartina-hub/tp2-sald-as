@@ -1,0 +1,2 @@
+   # Solo se usa la biblioteca estándar de Python 3.10+.
+   # No hay dependencias externas por ahora. 
