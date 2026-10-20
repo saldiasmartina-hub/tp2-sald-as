@@ -33,5 +33,18 @@
 - **Decisión sobre datos faltantes:** los pasajeros sin edad no se descartan del
   conjunto; solo se excluyen de esta comparación y se informa cuántos son.
 
+## Solución propuesta y operaciones
 
+Un explorador de consola que permite trabajar con la lista de pasajeros del
+Titanic. Quien lo use puede:
+
+- **Buscar** un pasajero por su identificador y ver su ficha.
+- **Filtrar** un grupo por clase (1.ª, 2.ª, 3.ª) y grupo de edad (menor,
+  adulto o edad desconocida).
+- **Resumir** el grupo filtrado: cantidad de pasajeros, cantidad de
+  sobrevivientes y proporción de supervivencia.
+- **Exportar** las fichas y el resumen del grupo seleccionado a un archivo.
+
+La pregunta guía se responde comparando el resumen de los menores con el de
+los adultos dentro de cada clase.
 
