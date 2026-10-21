@@ -3,7 +3,13 @@ import argparse
 import sys
 
 from src.fuentes import ErrorDeLectura, FuenteCSV, FuenteJSON
-from src.pipeline import buscar_pasajero, indexar_pasajeros, limpiar_pasajeros
+from src.pipeline import (
+    buscar_pasajero,
+    filtrar_grupo,
+    indexar_pasajeros,
+    limpiar_pasajeros,
+    resumir_grupo,
+)
 
 
 def elegir_fuente(ruta):
@@ -24,6 +30,14 @@ def construir_parser():
 
     buscar = subcomandos.add_parser("buscar", help="mostrar la ficha de un pasajero")
     buscar.add_argument("--id", type=int, required=True, help="identificador del pasajero")
+
+    resumir = subcomandos.add_parser("resumir", help="resumir un grupo de pasajeros")
+    resumir.add_argument("--clase", type=int, choices=(1, 2, 3), help="clase del pasaje")
+    resumir.add_argument(
+        "--grupo-edad",
+        choices=("menor", "adulto", "desconocida"),
+        help="grupo de edad",
+    )
     return parser
 
 
@@ -49,6 +63,17 @@ def main(argv=None):
         print(f"Edad: {ficha.edad if ficha.edad is not None else 'desconocida'}")
         print(f"Grupo de edad: {ficha.grupo_edad()}")
         print(f"Sobrevivió: {'sí' if ficha.sobrevivio else 'no'}")
+
+    elif args.operacion == "resumir":
+        grupo = filtrar_grupo(pasajeros, clase=args.clase, grupo_edad=args.grupo_edad)
+        resumen = resumir_grupo(grupo)
+        print(f"Grupo: clase={args.clase or 'todas'}, edad={args.grupo_edad or 'todas'}")
+        print(f"Pasajeros: {resumen['cantidad']}")
+        print(f"Sobrevivientes: {resumen['sobrevivientes']}")
+        if resumen["proporcion"] is None:
+            print("Proporción: no se puede calcular (el grupo está vacío)")
+        else:
+            print(f"Proporción de sobrevivientes: {resumen['proporcion']}")
     return 0
 
 
