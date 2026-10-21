@@ -43,3 +43,18 @@ def filtrar_grupo(pasajeros, clase=None, grupo_edad=None):
         if (clase is None or p.clase == clase)
         and (grupo_edad is None or p.grupo_edad() == grupo_edad)
     ]
+
+
+def resumir_grupo(pasajeros):
+    """Devuelve la cantidad, los sobrevivientes y la proporción de un grupo.
+
+    Si el grupo está vacío, la proporción es None (no se divide por cero).
+    """
+    cantidad = len(pasajeros)
+    sobrevivientes = sum(1 for p in pasajeros if p.sobrevivio)
+    proporcion = round(sobrevivientes / cantidad, 3) if cantidad > 0 else None
+    return {
+        "cantidad": cantidad,
+        "sobrevivientes": sobrevivientes,
+        "proporcion": proporcion,
+    }
