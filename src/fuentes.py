@@ -1,4 +1,5 @@
 import csv
+import json
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -28,3 +29,11 @@ class FuenteCSV(FuenteDatos):
             raise ErrorDeLectura(f"No se encontró el archivo: {self.ruta}")
         with open(self.ruta, newline="", encoding="utf-8") as archivo:
             return list(csv.DictReader(archivo))
+
+
+class FuenteJSON(FuenteDatos):
+    def cargar(self):
+        if not self.ruta.is_file():
+            raise ErrorDeLectura(f"No se encontró el archivo: {self.ruta}")
+        with open(self.ruta, encoding="utf-8") as archivo:
+            return json.load(archivo)
