@@ -1,9 +1,9 @@
-   .venv/
-   venv/
-   __pycache__/
-   *.pyc
-   .env
-   .DS_Store
-   .vscode/
-   outputs/*
-   !outputs/.gitkeep
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.vscode/
+outputs/*
+!outputs/.gitkeep
