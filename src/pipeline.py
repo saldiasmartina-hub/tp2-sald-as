@@ -1,3 +1,6 @@
+import csv
+from pathlib import Path
+
 from src.modelos import Pasajero
 from src.validacion import ErrorDeValidacion
 
@@ -58,3 +61,26 @@ def resumir_grupo(pasajeros):
         "sobrevivientes": sobrevivientes,
         "proporcion": proporcion,
     }
+
+
+def exportar_fichas(pasajeros, ruta):
+    """Guarda las fichas de un grupo en un CSV y devuelve la cantidad escrita."""
+    ruta = Path(ruta)
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    columnas = ["id", "nombre", "billete", "clase", "edad", "grupo_edad", "sobrevivio"]
+    with open(ruta, "w", newline="", encoding="utf-8") as archivo:
+        escritor = csv.DictWriter(archivo, fieldnames=columnas, lineterminator="\n")
+        escritor.writeheader()
+        for p in pasajeros:
+            escritor.writerow(
+                {
+                    "id": p.id_pasajero,
+                    "nombre": p.nombre,
+                    "billete": p.billete,
+                    "clase": p.clase,
+                    "edad": "" if p.edad is None else p.edad,
+                    "grupo_edad": p.grupo_edad(),
+                    "sobrevivio": int(p.sobrevivio),
+                }
+            )
+    return len(pasajeros)
