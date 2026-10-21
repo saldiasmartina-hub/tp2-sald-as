@@ -20,3 +20,26 @@ def limpiar_pasajeros(registros):
         ids_vistos.add(pasajero.id_pasajero)
         pasajeros.append(pasajero)
     return pasajeros, rechazos
+
+
+def indexar_pasajeros(pasajeros):
+    """Devuelve un diccionario {id_pasajero: Pasajero} para buscar rápido."""
+    return {p.id_pasajero: p for p in pasajeros}
+
+
+def buscar_pasajero(indice, id_pasajero):
+    """Devuelve la ficha del pasajero o None si el identificador no existe."""
+    return indice.get(id_pasajero)
+
+
+def filtrar_grupo(pasajeros, clase=None, grupo_edad=None):
+    """Devuelve los pasajeros que cumplen los criterios indicados.
+
+    Un criterio en None no filtra. Ejemplo: clase=1, grupo_edad="menor".
+    """
+    return [
+        p
+        for p in pasajeros
+        if (clase is None or p.clase == clase)
+        and (grupo_edad is None or p.grupo_edad() == grupo_edad)
+    ]
