@@ -186,3 +186,33 @@ revisa la forma: no sabe si el billete existió realmente.
 Las 4 filas rechazadas (pasajeros 180, 272, 303 y 598) tienen el billete `LINE`, que
 no termina en número y por lo tanto no cumple el esquema. En este archivo no se
 encontraron identificadores repetidos ni valores fuera de rango.
+
+
+## Ejemplo de resultado
+
+Pregunta guía: ¿los menores de 18 años sobrevivieron más que los adultos dentro de cada
+clase? Se obtiene ejecutando `resumir` una vez por grupo, por ejemplo:
+
+```bash
+python -m src.main resumir --clase 2 --grupo-edad menor
+```
+
+```
+Grupo: clase=2, edad=menor
+Pasajeros: 23
+Sobrevivientes: 21
+Proporción de sobrevivientes: 0.913
+```
+
+Resultados sobre `data/titanic.csv` (887 pasajeros válidos):
+
+| Clase | Grupo de edad | Pasajeros | Sobrevivientes | Proporción |
+|---|---|---|---|---|
+| 1 | menor | 12 | 11 | 0.917 |
+| 1 | adulto | 174 | 111 | 0.638 |
+| 2 | menor | 23 | 21 | 0.913 |
+| 2 | adulto | 150 | 62 | 0.413 |
+| 3 | menor | 78 | 29 | 0.372 |
+| 3 | adulto | 273 | 55 | 0.201 |
+
+Los 177 pasajeros válidos sin edad quedan fuera de esta comparación (grupo "desconocida").
