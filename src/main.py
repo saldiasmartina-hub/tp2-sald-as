@@ -12,6 +12,7 @@ from src.pipeline import (
     limpiar_pasajeros,
     resumir_grupo,
 )
+from src.validacion import ErrorDeValidacion, validar_esquema
 
 
 def elegir_fuente(ruta):
@@ -63,8 +64,12 @@ def main(argv=None):
     args = construir_parser().parse_args(argv)
     try:
         registros = elegir_fuente(args.entrada).cargar()
+        validar_esquema(registros)
     except ErrorDeLectura as error:
         print(f"Error de lectura: {error}", file=sys.stderr)
+        return 1
+    except ErrorDeValidacion as error:
+        print(f"Error en los datos: {error}", file=sys.stderr)
         return 1
 
     pasajeros, rechazos = limpiar_pasajeros(registros)
