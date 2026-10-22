@@ -84,3 +84,14 @@ def exportar_fichas(pasajeros, ruta):
                 }
             )
     return len(pasajeros)
+
+
+def exportar_rechazos(rechazos, ruta):
+    """Guarda las filas rechazadas (id y motivo) en un CSV y devuelve la cantidad."""
+    ruta = Path(ruta)
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    with open(ruta, "w", newline="", encoding="utf-8") as archivo:
+        escritor = csv.writer(archivo, lineterminator="\n")
+        escritor.writerow(["id", "motivo"])
+        escritor.writerows(rechazos)
+    return len(rechazos)

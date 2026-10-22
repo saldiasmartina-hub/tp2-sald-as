@@ -6,6 +6,7 @@ from src.fuentes import ErrorDeLectura, FuenteCSV, FuenteJSON
 from src.pipeline import (
     buscar_pasajero,
     exportar_fichas,
+    exportar_rechazos,
     filtrar_grupo,
     indexar_pasajeros,
     limpiar_pasajeros,
@@ -37,6 +38,11 @@ def construir_parser():
     parser.add_argument(
         "--entrada", default="data/titanic.csv", help="archivo .csv o .json con los datos"
     )
+    parser.add_argument(
+        "--rechazos",
+        default="outputs/rechazos.csv",
+        help="archivo CSV donde se guardan las filas rechazadas y su motivo",
+    )
     subcomandos = parser.add_subparsers(dest="operacion", required=True)
 
     buscar = subcomandos.add_parser("buscar", help="mostrar la ficha de un pasajero")
@@ -62,6 +68,12 @@ def main(argv=None):
         return 1
 
     pasajeros, rechazos = limpiar_pasajeros(registros)
+    exportar_rechazos(rechazos, args.rechazos)
+    print(
+        f"Limpieza: {len(registros)} filas leídas, {len(pasajeros)} válidas, "
+        f"{len(rechazos)} rechazadas (detalle en {args.rechazos})"
+    )
+    print()
 
     if args.operacion == "buscar":
         ficha = buscar_pasajero(indexar_pasajeros(pasajeros), args.id)
