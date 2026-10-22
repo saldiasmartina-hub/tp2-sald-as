@@ -63,3 +63,49 @@ Titanic. Quien lo use puede:
 La pregunta guía se responde comparando el resumen de los menores con el de
 los adultos dentro de cada clase.
 
+## Instalación y ejecución
+
+Requiere **Python 3.10 o superior**. No hay dependencias externas: solo se usa la
+biblioteca estándar (`requirements.txt` lo aclara).
+
+```bash
+git clone https://github.com/saldiasmartina-hub/tp2-sald-as.git
+cd tp2-sald-as
+```
+
+> En Windows, si el comando `python` no funciona, usar `py` en su lugar.
+
+### Operaciones
+
+Buscar la ficha de un pasajero por su identificador:
+
+```bash
+python -m src.main buscar --id 6
+```
+
+Resumir un grupo (cantidad, sobrevivientes y proporción). Los filtros
+`--clase` (1, 2 o 3) y `--grupo-edad` (`menor`, `adulto` o `desconocida`) son opcionales:
+
+```bash
+python -m src.main resumir --clase 1 --grupo-edad menor
+```
+
+Exportar las fichas de un grupo a un archivo CSV:
+
+```bash
+python -m src.main exportar --clase 1 --grupo-edad menor --salida outputs/menores_clase1.csv
+```
+
+Todas las operaciones leen `data/titanic.csv` por defecto. Para leer el JSON
+equivalente:
+
+```bash
+python -m src.main --entrada data/titanic.json resumir --clase 1
+```
+
+### Pruebas
+
+```bash
+python -m unittest discover -s tests -t . -v
+```
+
