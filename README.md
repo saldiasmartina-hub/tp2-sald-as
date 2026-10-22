@@ -257,3 +257,22 @@ además, la proporción de los menores (0.372) es mucho menor que en las otras d
   cambiarían.
 - **Alcance de la fuente:** la copia usada no declara una licencia explícita y no es
   una lista oficial completa de las personas a bordo.
+
+
+## Datos
+
+- **Fuente:** lista de pasajeros del Titanic, copia en CSV publicada en el repositorio
+  `datasciencedojo/datasets` de GitHub.
+- **URL:** https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
+- **Responsable:** Data Science Dojo (quien publica la copia).
+- **Licencia / condiciones de uso:** conjunto de uso público y educativo; la copia
+  consultada **no declara una licencia explícita**.
+- **Fecha de consulta:** 20/10/2026.
+- **Unidad de análisis:** cada fila representa **un pasajero**.
+- **Tamaño:** 891 registros y 12 columnas; el análisis usa `PassengerId`, `Name`,
+  `Ticket`, `Pclass`, `Age` y `Survived`.
+- **Archivos:** `data/titanic.csv` y su equivalente `data/titanic.json`, generado con
+  `scripts/generar_json.py`.
+
+El detalle de cada variable y las limitaciones de los datos están en
+[`data/README.md`](data/README.md).
