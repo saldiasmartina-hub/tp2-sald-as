@@ -6,6 +6,7 @@ from src.validacion import (
     convertir_edad,
     convertir_entero_en,
     validar_billete,
+    validar_esquema,
 )
 
 
@@ -61,6 +62,25 @@ class TestBilleteConRegex(unittest.TestCase):
             with self.subTest(texto=texto):
                 with self.assertRaises(ErrorDeValidacion):
                     validar_billete(texto)
+
+
+class TestEsquema(unittest.TestCase):
+    def test_esquema_completo_no_lanza_error(self):
+        validar_esquema([registro()])
+
+    def test_sin_registros_lanza_error(self):
+        with self.assertRaises(ErrorDeValidacion) as contexto:
+            validar_esquema([])
+        self.assertIn("no contiene registros", str(contexto.exception))
+
+    def test_columnas_faltantes_se_nombran_en_el_mensaje(self):
+        fila = registro()
+        del fila["Survived"]
+        del fila["Ticket"]
+        with self.assertRaises(ErrorDeValidacion) as contexto:
+            validar_esquema([fila])
+        self.assertIn("Survived", str(contexto.exception))
+        self.assertIn("Ticket", str(contexto.exception))
 
 
 class TestPasajeroDesdeRegistro(unittest.TestCase):
