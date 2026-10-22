@@ -149,3 +149,40 @@ tp2-sald-as/
 | `indexar_pasajeros`, `buscar_pasajero` | Búsqueda por identificador |
 | `filtrar_grupo`, `resumir_grupo` | Filtro por clase y grupo de edad; cantidad, sobrevivientes y proporción |
 | `exportar_fichas` | Guarda un grupo en un archivo CSV |
+
+
+## Decisiones de limpieza
+
+Cada fila del archivo se valida al convertirla en un `Pasajero`. Las filas que no
+cumplen no se pierden: quedan en la lista de rechazos con su identificador y el motivo.
+
+| Situación | Decisión | Por qué |
+|---|---|---|
+| `PassengerId` repetido | Se conserva la primera aparición y se rechazan las demás | No se puede saber cuál es la correcta; elegir una al azar escondería el problema |
+| `Survived` distinto de 0 o 1 | Se rechaza la fila | El resultado a analizar no es interpretable |
+| `Pclass` distinta de 1, 2 o 3 | Se rechaza la fila | La clase define los grupos de comparación |
+| `Age` no numérica, menor o igual a 0, o mayor a 100 | Se rechaza la fila | Es un valor imposible |
+| `Age` vacía | **Se acepta** y el pasajero queda con edad desconocida | Es un faltante frecuente; descartarlo reduciría mucho los datos |
+| `Ticket` sin formato válido | Se rechaza la fila | No cumple el esquema de billete definido (ver abajo) |
+| `Name` vacío | Se rechaza la fila | La ficha del pasajero lo necesita |
+
+### Qué valida la expresión regular del billete
+
+El patrón `(?:[A-Za-z0-9./]+ )*[0-9]+` comprueba la **forma** del billete: cero o más
+palabras de prefijo (letras, números, puntos o barras) seguidas de un espacio, y al
+final un número. Acepta `113803`, `PC 17599`, `A/5 21171` o `STON/O2. 3101282`.
+Se usa `fullmatch`, de modo que debe cumplirse en **todo** el texto. La regex solo
+revisa la forma: no sabe si el billete existió realmente.
+
+### Resultado de la limpieza sobre `data/titanic.csv`
+
+| | Cantidad |
+|---|---|
+| Filas leídas | 891 |
+| Pasajeros válidos | 887 |
+| Filas rechazadas | 4 |
+| Válidos sin edad (grupo "desconocida") | 177 |
+
+Las 4 filas rechazadas (pasajeros 180, 272, 303 y 598) tienen el billete `LINE`, que
+no termina en número y por lo tanto no cumple el esquema. En este archivo no se
+encontraron identificadores repetidos ni valores fuera de rango.
