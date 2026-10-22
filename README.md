@@ -216,3 +216,44 @@ Resultados sobre `data/titanic.csv` (887 pasajeros válidos):
 | 3 | adulto | 273 | 55 | 0.201 |
 
 Los 177 pasajeros válidos sin edad quedan fuera de esta comparación (grupo "desconocida").
+
+
+## Interpretación y limitaciones
+
+### Qué muestran los resultados
+
+En esta copia del conjunto, los menores de 18 años tuvieron una proporción de
+sobrevivientes mayor que los adultos **en las tres clases**:
+
+| Clase | Menores | Adultos | Diferencia |
+|---|---|---|---|
+| 1 | 0.917 | 0.638 | 0.279 |
+| 2 | 0.913 | 0.413 | 0.500 |
+| 3 | 0.372 | 0.201 | 0.171 |
+
+La diferencia es la más grande en 2.ª clase y la más chica en 3.ª. En 3.ª clase,
+además, la proporción de los menores (0.372) es mucho menor que en las otras dos.
+
+### Qué NO se puede concluir
+
+- **No es una explicación de causas.** Los resultados describen a estos pasajeros.
+  La edad está relacionada con otras variables que no se analizan aquí (sexo,
+  ubicación en el barco, tamaño de la familia), por lo que no se puede afirmar que
+  ser menor haya sido la causa de sobrevivir.
+- **No se generalizan** a otros naufragios ni a otras poblaciones.
+
+### Limitaciones de los datos y del análisis
+
+- **Grupos chicos:** hay solo 12 menores en 1.ª clase y 23 en 2.ª. Una proporción
+  calculada sobre tan pocos casos es poco estable: unas pocas personas más o menos
+  cambiarían bastante el valor.
+- **Edades faltantes:** 177 de los 887 pasajeros válidos (cerca del 20 %) no tienen
+  edad y quedan fuera de la comparación. Como no se sabe por qué faltan, el resultado
+  podría cambiar si se conocieran.
+- **Filas rechazadas por el billete:** se descartaron 4 pasajeros por tener el
+  billete `LINE`, que no cumple el esquema definido. Es una decisión de diseño, y
+  son pocos casos, pero es información que se pierde.
+- **Definición de "menor":** se usó el corte de 18 años; con otro corte los números
+  cambiarían.
+- **Alcance de la fuente:** la copia usada no declara una licencia explícita y no es
+  una lista oficial completa de las personas a bordo.
