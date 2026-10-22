@@ -109,3 +109,43 @@ python -m src.main --entrada data/titanic.json resumir --clase 1
 python -m unittest discover -s tests -t . -v
 ```
 
+
+## Organización del código
+
+```
+tp2-sald-as/
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── src/
+│   ├── __init__.py
+│   ├── main.py          # consola: elige la operación y muestra el resultado
+│   ├── fuentes.py       # FuenteDatos (abstracta), FuenteCSV y FuenteJSON
+│   ├── modelos.py       # clase Pasajero
+│   ├── validacion.py    # conversiones, rangos y expresión regular del billete
+│   └── pipeline.py      # limpieza, búsqueda, filtro, resumen y exportación
+├── tests/               # pruebas con unittest
+├── data/                # titanic.csv, titanic.json y README de los datos
+├── scripts/
+│   └── generar_json.py  # genera titanic.json a partir de titanic.csv
+└── outputs/             # archivos exportados (no se versionan)
+```
+
+### Flujo de procesamiento
+
+`leer` (`fuentes.py`) → `validar y limpiar` (`validacion.py`, `modelos.py`,
+`pipeline.limpiar_pasajeros`) → `operar` (`buscar`, `filtrar`, `resumir`) →
+`comunicar` (`main.py` muestra el resultado o `exportar_fichas` lo guarda).
+
+### Responsabilidad de cada pieza
+
+| Pieza | Responsabilidad |
+|---|---|
+| `FuenteDatos` | Contrato común: toda fuente sabe hacer `cargar()` |
+| `FuenteCSV`, `FuenteJSON` | Leen su formato y devuelven la misma lista de diccionarios |
+| `Pasajero` | Ficha con tipos correctos; calcula su grupo de edad |
+| `convertir_edad`, `convertir_entero_en`, `validar_billete` | Validan un dato y lanzan `ErrorDeValidacion` con un mensaje claro |
+| `limpiar_pasajeros` | Convierte las filas, aparta las rechazadas con su motivo y detecta duplicados |
+| `indexar_pasajeros`, `buscar_pasajero` | Búsqueda por identificador |
+| `filtrar_grupo`, `resumir_grupo` | Filtro por clase y grupo de edad; cantidad, sobrevivientes y proporción |
+| `exportar_fichas` | Guarda un grupo en un archivo CSV |
