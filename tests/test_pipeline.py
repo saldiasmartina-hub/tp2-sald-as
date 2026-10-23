@@ -1,9 +1,17 @@
+import csv
+import tempfile
 import unittest
 from pathlib import Path
 
 from src.fuentes import FuenteCSV
 from src.modelos import Pasajero
-from src.pipeline import filtrar_grupo, limpiar_pasajeros, resumir_grupo
+from src.pipeline import (
+    exportar_fichas,
+    exportar_rechazos,
+    filtrar_grupo,
+    limpiar_pasajeros,
+    resumir_grupo,
+)
 
 DATOS = Path(__file__).resolve().parent.parent / "data"
 
@@ -25,6 +33,12 @@ def fila(**cambios):
     }
     base.update(cambios)
     return base
+
+
+def leer_csv(ruta):
+    """Lee un CSV exportado y devuelve una lista de diccionarios."""
+    with open(ruta, newline="", encoding="utf-8") as archivo:
+        return list(csv.DictReader(archivo))
 
 
 class TestResumirGrupo(unittest.TestCase):
@@ -86,6 +100,38 @@ class TestLimpieza(unittest.TestCase):
         self.assertEqual(len(registros), 891)
         self.assertEqual(len(validos), 887)
         self.assertEqual(sorted(r[0] for r in rechazos), ["180", "272", "303", "598"])
+
+
+class TestExportacion(unittest.TestCase):
+    def test_exportar_rechazos_guarda_id_y_motivo(self):
+        rechazos = [("180", "El billete no tiene un formato válido: 'LINE'"), ("272", "otro")]
+        with tempfile.TemporaryDirectory() as carpeta:
+            ruta = Path(carpeta) / "rechazos.csv"
+            escritas = exportar_rechazos(rechazos, ruta)
+            filas = leer_csv(ruta)
+        self.assertEqual(escritas, 2)
+        self.assertEqual(len(filas), 2)
+        self.assertEqual(filas[0]["id"], "180")
+        self.assertIn("LINE", filas[0]["motivo"])
+
+    def test_exportar_fichas_una_fila_por_pasajero(self):
+        grupo = [pasajero(1, edad=10.0), pasajero(2, edad=None, sobrevivio=False)]
+        with tempfile.TemporaryDirectory() as carpeta:
+            ruta = Path(carpeta) / "fichas.csv"
+            escritas = exportar_fichas(grupo, ruta)
+            filas = leer_csv(ruta)
+        self.assertEqual(escritas, 2)
+        self.assertEqual([f["id"] for f in filas], ["1", "2"])
+        self.assertEqual(filas[0]["grupo_edad"], "menor")
+        self.assertEqual(filas[1]["edad"], "")
+        self.assertEqual(filas[1]["grupo_edad"], "desconocida")
+        self.assertEqual(filas[1]["sobrevivio"], "0")
+
+    def test_exportar_crea_la_carpeta_de_destino(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            ruta = Path(carpeta) / "nueva" / "subcarpeta" / "fichas.csv"
+            exportar_fichas([pasajero(1)], ruta)
+            self.assertTrue(ruta.is_file())
 
 
 if __name__ == "__main__":
