@@ -58,7 +58,7 @@ Titanic. Quien lo use puede:
   adulto o edad desconocida).
 - **Resumir** el grupo filtrado: cantidad de pasajeros, cantidad de
   sobrevivientes y proporción de supervivencia.
-- **Exportar** las fichas y el resumen del grupo seleccionado a un archivo.
+- **Exportar** las fichas del grupo seleccionado a un archivo CSV.
 
 La pregunta guía se responde comparando el resumen de los menores con el de
 los adultos dentro de cada clase.
@@ -165,6 +165,16 @@ cumplen no se pierden: quedan en la lista de rechazos con su identificador y el 
 | `Age` vacía | **Se acepta** y el pasajero queda con edad desconocida | Es un faltante frecuente; descartarlo reduciría mucho los datos |
 | `Ticket` sin formato válido | Se rechaza la fila | No cumple el esquema de billete definido (ver abajo) |
 | `Name` vacío | Se rechaza la fila | La ficha del pasajero lo necesita |
+
+### Inspección del esquema y registro de rechazos
+
+Antes de limpiar, el programa comprueba que el archivo tenga registros y las columnas
+obligatorias (`PassengerId`, `Survived`, `Pclass`, `Name`, `Age` y `Ticket`). Si falta
+alguna, se detiene con un mensaje que indica cuáles faltan.
+
+En cada ejecución se guarda `outputs/rechazos.csv` con el identificador y el motivo de
+cada fila rechazada (la ruta se puede cambiar con `--rechazos`), y se muestra una línea
+con las filas leídas, válidas y rechazadas. Esa carpeta no se versiona.
 
 ### Qué valida la expresión regular del billete
 
